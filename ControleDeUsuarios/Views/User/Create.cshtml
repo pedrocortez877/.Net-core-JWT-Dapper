@@ -1,0 +1,94 @@
+﻿@model ControleDeUsuarios.ViewModel.Create
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<link rel="stylesheet" href="~/css/styles.css" />
+
+<hr />
+<div class="row">
+    <div class="col-md-4" style="margin-bottom: 30px;">
+        <table >
+            <tr>
+                <td>
+                    @using (Html.BeginForm("Create", "User", FormMethod.Post))
+                    {
+                    <table>
+                        <tr>
+                            <td>Nome : </td>
+                            <td>@Html.EditorFor(a => a.Nome)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Nome)</td>
+                        </tr>
+                        <tr>
+                            <td>CPF : </td>
+                            <td>@Html.EditorFor(a => a.Cpf)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cpf)</td>
+                        </tr>
+                        <tr>
+                            <td>Permissão : </td>
+                            <td>@Html.EditorFor(a => a.Permissao)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Permissao)</td>
+                        </tr>
+                        <tr>
+                            <td>Email : </td>
+                            <td>@Html.EditorFor(a => a.Email)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Email)</td>
+                        </tr>
+                        <tr>
+                            <td>Senha : </td>
+                            <td>@Html.PasswordFor(a => a.Senha)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Senha)</td>
+                        </tr>
+                        <tr>
+                            <td>Confirme sua senha : </td>
+                            <td>@Html.PasswordFor(a => a.ConfirmaSenha)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.ConfirmaSenha)</td>
+                        </tr>
+                        <tr>
+                            <td>CEP : </td>
+                            <td>@Html.EditorFor(a => a.Cep)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cep)</td>
+                        </tr>
+                        <tr>
+                            <td>Pais : </td>
+                            <td>@Html.EditorFor(a => a.Pais)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Pais)</td>
+                        </tr>
+                        <tr>
+                            <td>Estado : </td>
+                            <td>@Html.EditorFor(a => a.Estado)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Estado)</td>
+                        </tr>
+                        <tr>
+                            <td>Cidade : </td>
+                            <td>@Html.EditorFor(a => a.Cidade)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cidade)</td>
+                        </tr>
+                        <tr>
+                            <td>Bairro : </td>
+                            <td>@Html.EditorFor(a => a.Bairro)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Bairro)</td>
+                        </tr>
+                        <tr>
+                            <td>Rua : </td>
+                            <td>@Html.EditorFor(a => a.Rua)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Rua)</td>
+                        </tr>
+                        <tr>
+                            <td>Numero : </td>
+                            <td>@Html.EditorFor(a => a.Numero)</td>
+                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Numero)</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td> <input type="submit" class="button button4" value="Cadastrar" /></td>
+                        </tr>
+                    </table>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+

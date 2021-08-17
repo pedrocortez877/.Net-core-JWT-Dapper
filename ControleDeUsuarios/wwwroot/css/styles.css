@@ -1,0 +1,11 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #2c1e4d, #8257e5);
+    color: white;
+}
+
+th, td {
+    color: white;
+}

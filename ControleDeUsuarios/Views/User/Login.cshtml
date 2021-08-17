@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+<link rel="stylesheet" href="~/css/login.css" />
+
+<div class="myPage">
+    <div class="myCard">
+        <form action="/User/Logar" method="post" class="box" id="myForm">
+            <h1>Entrar</h1>
+            <p class="text-muted"> Por favor entre com seu e-mail e senha!</p>
+            <input type="text" name="Email" placeholder="E-mail" id="Email">
+            <input type="password" name="Senha" placeholder="Senha" id="Senha">
+            <a class="forgot text-muted" href="#">Esqueceu sua senha?</a>
+            <input type="submit" name="" value="Entrar" href="#" id="btnSubmit">
+            <div class="col-md-12">
+                <ul class="social-network social-circle">
+                    <li><a href="#" class="icoFacebook" title="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+                    <li><a href="#" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i></a></li>
+                    <li><a href="#" class="icoGoogle" title="Google +"><i class="fab fa-google-plus"></i></a></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
