@@ -14,9 +14,9 @@ namespace ControleDeUsuarios.Controllers
     {
         public IActionResult Index()
         {
-            var token = HttpContext.Session.GetString("token");
+            //Verificar se token e nulo!!!
+            string token = HttpContext.Session.GetString("token");
             HttpResponseMessage response = Api.GetUtil(token, "/Usuarios");
-            //PEGAR SOMENTE STRING DO TOKEN
             string exception = Api.ExceptionUtil(response);
 
             if (!string.IsNullOrEmpty(exception))
