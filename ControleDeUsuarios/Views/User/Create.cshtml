@@ -14,81 +14,108 @@
                 <td>
                     @using (Html.BeginForm("Create", "User", FormMethod.Post))
                     {
-                    <table>
-                        <tr>
-                            <td>Nome : </td>
-                            <td>@Html.EditorFor(a => a.Nome)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Nome)</td>
-                        </tr>
-                        <tr>
-                            <td>CPF : </td>
-                            <td>@Html.EditorFor(a => a.Cpf)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cpf)</td>
-                        </tr>
-                        <tr>
-                            <td>Permissão : </td>
-                            <td>@Html.EditorFor(a => a.Permissao)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Permissao)</td>
-                        </tr>
-                        <tr>
-                            <td>Email : </td>
-                            <td>@Html.EditorFor(a => a.Email)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Email)</td>
-                        </tr>
-                        <tr>
-                            <td>Senha : </td>
-                            <td>@Html.PasswordFor(a => a.Senha)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Senha)</td>
-                        </tr>
-                        <tr>
-                            <td>Confirme sua senha : </td>
-                            <td>@Html.PasswordFor(a => a.ConfirmaSenha)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.ConfirmaSenha)</td>
-                        </tr>
-                        <tr>
-                            <td>CEP : </td>
-                            <td>@Html.EditorFor(a => a.Cep)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cep)</td>
-                        </tr>
-                        <tr>
-                            <td>Pais : </td>
-                            <td>@Html.EditorFor(a => a.Pais)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Pais)</td>
-                        </tr>
-                        <tr>
-                            <td>Estado : </td>
-                            <td>@Html.EditorFor(a => a.Estado)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Estado)</td>
-                        </tr>
-                        <tr>
-                            <td>Cidade : </td>
-                            <td>@Html.EditorFor(a => a.Cidade)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Cidade)</td>
-                        </tr>
-                        <tr>
-                            <td>Bairro : </td>
-                            <td>@Html.EditorFor(a => a.Bairro)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Bairro)</td>
-                        </tr>
-                        <tr>
-                            <td>Rua : </td>
-                            <td>@Html.EditorFor(a => a.Rua)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Rua)</td>
-                        </tr>
-                        <tr>
-                            <td>Numero : </td>
-                            <td>@Html.EditorFor(a => a.Numero)</td>
-                            <td class="text-danger">@Html.ValidationMessageFor(a => a.Numero)</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td> <input type="submit" class="button button4" value="Cadastrar" /></td>
-                        </tr>
-                    </table>
+                        <table>
+                            <tr>
+                                <td>Nome : </td>
+                                <td>@Html.EditorFor(a => a.Nome)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Nome)</td>
+                            </tr>
+                            <tr>
+                                <td>CPF : </td>
+                                <td>@Html.EditorFor(a => a.Cpf)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Cpf)</td>
+                            </tr>
+                            <tr>
+                                <td>Permissão : </td>
+                                <td>@Html.EditorFor(a => a.Permissao)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Permissao)</td>
+                            </tr>
+                            <tr>
+                                <td>Email : </td>
+                                <td>@Html.EditorFor(a => a.Email)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Email)</td>
+                            </tr>
+                            <tr>
+                                <td>Senha : </td>
+                                <td>@Html.PasswordFor(a => a.Senha)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Senha)</td>
+                            </tr>
+                            <tr>
+                                <td>Confirme sua senha : </td>
+                                <td>@Html.PasswordFor(a => a.ConfirmaSenha)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.ConfirmaSenha)</td>
+                            </tr>
+                            <tr>
+                                <td>CEP : </td>
+                                <td>@Html.EditorFor(a => a.Cep, new { htmlAttributes = new { @id = "cep" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Cep)</td>
+                            </tr>
+                            <tr>
+                                <td>Pais : </td>
+                                <td>@Html.EditorFor(a => a.Pais, new { htmlAttributes = new { @id = "pais" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Pais)</td>
+                            </tr>
+                            <tr>
+                                <td>Estado : </td>
+                                <td>@Html.EditorFor(a => a.Estado, new { htmlAttributes = new { @id = "uf" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Estado)</td>
+                            </tr>
+                            <tr>
+                                <td>Cidade : </td>
+                                <td>@Html.EditorFor(a => a.Cidade, new { htmlAttributes = new { @id = "cidade" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Cidade)</td>
+                            </tr>
+                            <tr>
+                                <td>Bairro : </td>
+                                <td>@Html.EditorFor(a => a.Bairro, new { htmlAttributes = new { @id = "bairro" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Bairro)</td>
+                            </tr>
+                            <tr>
+                                <td>Rua : </td>
+                                <td>@Html.EditorFor(a => a.Rua, new { htmlAttributes = new { @id = "rua" } })</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Rua)</td>
+                            </tr>
+                            <tr>
+                                <td>Numero : </td>
+                                <td>@Html.EditorFor(a => a.Numero)</td>
+                                <td class="text-danger">@Html.ValidationMessageFor(a => a.Numero)</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td> <input type="submit" class="button button4" value="Cadastrar" /></td>
+                            </tr>
+                        </table>
                     }
                 </td>
             </tr>
         </table>
     </div>
 </div>
+
+@section Scripts{ 
+    <script>
+        $("#cep").focusout(function () {
+            let cep = Number(document.getElementById("cep").value);
+            let url = "https://viacep.com.br/ws/" + cep + "/json/";
+            let uf = document.getElementById("uf");
+            let cidade = document.getElementById("cidade");
+            let bairro = document.getElementById("bairro");
+            let rua = document.getElementById("rua");
+            let pais = document.getElementById("pais");
+            console.log(cep, url);
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: url,
+                success: function (response) {
+                    uf.value = response.uf;
+                    cidade.value = response.localidade;
+                    bairro.value = response.bairro;
+                    rua.value = response.logradouro;
+                    pais.value = "Brasil";
+                }
+            });
+        })
+    </script>
+} 
 

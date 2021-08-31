@@ -35,6 +35,8 @@ namespace ControleDeUsuarios.ViewModel
         [Required(ErrorMessage = "*")]
         public string Senha { get; set; }
 
+        [DataType(DataType.Password)]
+        [Compare("Senha", ErrorMessage = "Senhas são diferentes!")]
         public string ConfirmaSenha { get; set; }
 
         //ENDEREÇO

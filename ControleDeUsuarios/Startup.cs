@@ -20,7 +20,12 @@ namespace ControleDeUsuarios
         {
             services.AddControllersWithViews();
 
+            services.AddMvc().AddSessionStateTempDataProvider();
+
             services.AddSession();
+
+            services.AddHttpContextAccessor();
+
             services.AddMemoryCache();
             
         }
