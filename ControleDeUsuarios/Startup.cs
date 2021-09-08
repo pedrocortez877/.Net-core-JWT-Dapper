@@ -19,6 +19,7 @@ namespace ControleDeUsuarios
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddMvc().AddSessionStateTempDataProvider();
 
