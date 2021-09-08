@@ -4,16 +4,18 @@ using ApiWeb.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApiWeb.Controllers
 {
     public class UserController : ControllerBase
     {
-        private readonly IUsuario _repositorio;
-
-        public UserController(IUsuario usuario)
+        private readonly IUsuario _repoUsuario;
+        private readonly IEndereco _repoEndereco;
+        public UserController(IUsuario usuario, IEndereco endereco)
         {
-            _repositorio = usuario;
+            _repoUsuario = usuario;
+            _repoEndereco = endereco;
         }
 
         //POST Login
@@ -37,7 +39,7 @@ namespace ApiWeb.Controllers
 
         private Usuario ValidateUser(string email, string senha)
         {
-            Usuario usuario = _repositorio.Logar(email, senha);
+            Usuario usuario = _repoUsuario.Logar(email, senha);
             if(usuario == null)
             {
                 return null;
@@ -50,8 +52,17 @@ namespace ApiWeb.Controllers
         [Authorize]
         public IEnumerable<Usuario> GetUsuarios()
         {
-            IEnumerable<Usuario> usuarios = _repositorio.ListarTodos();
+            IEnumerable<Usuario> usuarios = _repoUsuario.ListarTodos();
             return usuarios;
+        }
+
+        [HttpGet]
+        [Route("/Usuarios/{id}")]
+        [Authorize]
+        public Usuario GetUsuarioPorId([FromRoute] long id)
+        {
+            Usuario usuario = _repoUsuario.ListaPorId(id);
+            return usuario;
         }
 
         [HttpGet]
@@ -65,16 +76,60 @@ namespace ApiWeb.Controllers
         public string Administrador() => "ADM autenticado!";
 
         [HttpPost]
-        [Route("/Usuario")]
+        [Route("/Usuarios")]
         [Authorize(Roles = "ADM")]
-        public IActionResult NovoUsuario([FromBody]Usuario usuario)
+        public Task<long> NovoUsuario([FromBody]Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                long id_usuario = _repositorio.Salvar(usuario);
-                return Ok(new { id_usuario });
+                Task<long> idUsuario = _repoUsuario.Salvar(usuario);
+                return idUsuario;
             }
-            return BadRequest();
+            return null;
+        }
+
+        [HttpDelete]
+        [Route("/Usuarios/{id}")]
+        [Authorize(Roles = "ADM")]
+        public IActionResult ExcluiUsuario([FromRoute] long id)
+        {
+            Usuario usuario = _repoUsuario.ListaPorId(id);
+            if(usuario == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                //DELETA PRIMEIRO O ENDEREÇO PARA NÃO HAVER RESTRIÇÃO DE INTEGRIDADE
+                Endereco endereco = _repoEndereco.ListaPorIdUsuario(usuario.UsuarioId);
+                if(endereco == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    _repoEndereco.Excluir(endereco);
+
+                    _repoUsuario.Excluir(usuario);
+                    return Ok();
+                }
+            }
+        }
+
+        [HttpPut]
+        [Route("/Usuarios")]
+        [Authorize(Roles = "ADM")]
+        public IActionResult EditaUsuario([FromBody] Usuario usuario)
+        {
+            if(usuario == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                _repoUsuario.Editar(usuario);
+                return Ok();
+            }
         }
     }
 }

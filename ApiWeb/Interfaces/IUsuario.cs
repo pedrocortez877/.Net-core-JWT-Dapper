@@ -6,7 +6,7 @@ namespace ApiWeb.Interfaces
 {
     public interface IUsuario
     {
-        long Salvar(Usuario usuario);
+        Task<long> Salvar(Usuario usuario);
         void Excluir(Usuario usuario);
         IEnumerable<Usuario> ListarTodos();
         Usuario ListaPorId(long id);

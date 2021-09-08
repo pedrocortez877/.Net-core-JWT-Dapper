@@ -8,7 +8,7 @@ namespace ApiWeb.Interfaces
         void Salvar(Endereco Endereco);
         void Excluir(Endereco Endereco);
         IEnumerable<Endereco> ListarTodos();
-        Endereco ListaPorId(long id);
+        Endereco ListaPorIdUsuario(long id);
         void Editar(Endereco endereco);
     }
 }

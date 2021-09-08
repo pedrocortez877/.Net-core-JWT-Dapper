@@ -14,9 +14,9 @@ namespace ControleDeUsuarios.Services
 {
     public class Api
     {
-        public static string baseUrl = "https://localhost:44355/";
+        private readonly string baseUrl = "https://localhost:44355/";
 
-        public static HttpClient HttpUtil()
+        public HttpClient HttpUtil()
         {
             HttpClient client = new()
             {
@@ -28,7 +28,7 @@ namespace ControleDeUsuarios.Services
             return client;
         }
 
-        public static string LoginUtil(Usuario usuario)
+        public string LoginUtil(Usuario usuario)
         {
             HttpClient client = HttpUtil();
             string stringData = JsonConvert.SerializeObject(usuario);
@@ -42,23 +42,24 @@ namespace ControleDeUsuarios.Services
             return jwt;
         }
    
-        public static HttpResponseMessage GetUtil(string token, string route)
+        public HttpResponseMessage GetUtil(string token, string route)
         {
             HttpClient client = HttpUtil();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
             HttpResponseMessage response = client.GetAsync(route).Result;
+
             return response;
         }
 
-        public static HttpResponseMessage CreateUtil(Usuario usuario, Endereco endereco, string token)
+        public HttpResponseMessage CreateUtil(Usuario usuario, Endereco endereco, string token)
         {
             HttpClient client = HttpUtil();
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            string route = "/Usuario";
+            string route = "/Usuarios";
             string stringData = JsonConvert.SerializeObject(usuario);
             var contentData = new StringContent
                 (stringData, System.Text.Encoding.UTF8, "application/json");
@@ -71,41 +72,66 @@ namespace ControleDeUsuarios.Services
             }
             else
             {
-                string idUsuario = responseUser.Content.ReadAsStringAsync().Result.Substring(14, 5);
-                route = "/Endereco";
+                string result = responseUser.Content.ReadAsStringAsync().Result;
+                long idUsuario = JsonConvert.DeserializeObject<long>(result);
+                route = "/Enderecos";
 
-                if (int.TryParse(idUsuario, out int idInt))
-                {
-                    endereco.Usuario_Id = idInt;
-                    stringData = JsonConvert.SerializeObject(endereco);
-                    contentData = new StringContent
-                        (stringData, System.Text.Encoding.UTF8, "application/json");
-                    HttpResponseMessage response = client.PostAsync(route, contentData).Result;
-                    return response;
-                }
-                else
-                {
-                    responseUser.StatusCode = HttpStatusCode.BadRequest;
-                    return responseUser;
-                }
+                endereco.UsuarioId = idUsuario;
+                stringData = JsonConvert.SerializeObject(endereco);
+                contentData = new StringContent
+                    (stringData, System.Text.Encoding.UTF8, "application/json");
+                HttpResponseMessage response = client.PostAsync(route, contentData).Result;
+                return response;
             }
         }
 
-        public static string ExceptionUtil(HttpResponseMessage response)
+        public async Task<HttpResponseMessage> DeleteUtil(long id, string token)
         {
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            HttpClient client = HttpUtil();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            string url = "/Usuarios/" + id; 
+
+            HttpResponseMessage response = await client.DeleteAsync(url);
+            return response;
+        }
+
+        public HttpResponseMessage EditUtil(Usuario usuario, Endereco endereco, string token)
+        {
+            HttpClient client = HttpUtil();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            Task<HttpResponseMessage> responseUser = EditUser(usuario, client);
+
+            if (responseUser.Result.IsSuccessStatusCode)
             {
-                return "Não autorizado a acessar este recurso";
+                Task<HttpResponseMessage> responseAddress = EditAddress(endereco, client);
+                return responseAddress.Result;
             }
-            if (response.StatusCode == HttpStatusCode.Forbidden)
-            {
-                return "Não tem permissões de acesso suficientes";
-            }
-            if (response.StatusCode == HttpStatusCode.BadRequest)
-            {
-                return "Erro desconhecido no servidor";
-            }
-            return "";
+           
+            return responseUser.Result;
+        }
+
+        public async Task<HttpResponseMessage> EditUser(Usuario usuario, HttpClient client)
+        {
+            string stringData = JsonConvert.SerializeObject(usuario);
+            var contentData = new StringContent
+                (stringData, System.Text.Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PutAsync("/Usuarios", contentData);
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> EditAddress(Endereco endereco, HttpClient client)
+        {
+            string stringData = JsonConvert.SerializeObject(endereco);
+            var contentData = new StringContent
+                (stringData, System.Text.Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PutAsync("/Enderecos", contentData);
+            return response;
         }
     }
 }

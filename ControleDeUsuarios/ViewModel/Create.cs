@@ -70,10 +70,5 @@ namespace ControleDeUsuarios.ViewModel
 
         [Required(ErrorMessage = "*")]
         public int Numero { get; set; }
-
-        [Required(ErrorMessage = "*")]
-        public long Usuario_Id { get; set; }
-
-
     }
 }

@@ -26,117 +26,57 @@ namespace ApiWeb.Repositorio
 
         public void Editar(Endereco endereco)
         {
-            var con = new SqlConnection(this.GetConnection());
-            try
-            {
-                var sqlStatement = @"
-                    UPDATE EnderecoS SET
-                    cep = @Cep,
-                    pais = @Pais,
-                    estado = @Estado,
-                    cidade = @Cidade,
-                    bairro = @Bairro,
-                    rua = @Rua,
-                    numero = @Numero
-                    WHERE id_endereco = @EnderecoId
-                ";
-                con.Open();
-                con.Query(sqlStatement, endereco);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                UPDATE EnderecoS SET
+                Cep = @Cep,
+                Pais = @Pais,
+                Estado = @Estado,
+                Cidade = @Cidade,
+                Bairro = @Bairro,
+                Rua = @Rua,
+                Numero = @Numero
+                WHERE EnderecoId = @EnderecoId
+            ";
+            con.Query(sqlStatement, endereco);
         }
 
         public void Excluir(Endereco endereco)
         {
-            var con = new SqlConnection(this.GetConnection());
-            try
-            {
-                var sqlStatement = @"
-                    DELETE FROM Enderecos
-                    WHERE id_endereco = @EnderecoId
-                ";
-                con.Open();
-                con.Query(sqlStatement, endereco);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                DELETE FROM Enderecos
+                WHERE EnderecoId = @EnderecoId
+            ";
+            con.Query(sqlStatement, endereco);
         }
 
-        public Endereco ListaPorId(long id)
+        public Endereco ListaPorIdUsuario(long id)
         {
-            var con = new SqlConnection(this.GetConnection());
+            using var con = new SqlConnection(this.GetConnection());
             Endereco endereco = new();
-            try
-            {
-                var sqlStatement = "SELECT * FROM Enderecos WHERE id_endereco =" + id;
-                con.Open();
-                endereco = con.Query<Endereco>(sqlStatement, endereco).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            var sqlStatement = "SELECT * FROM Enderecos WHERE UsuarioId =" + id;
+            endereco = con.Query<Endereco>(sqlStatement, endereco).FirstOrDefault();
             return endereco;
         }
 
         public IEnumerable<Endereco> ListarTodos()
         {
-            var con = new SqlConnection(this.GetConnection());
+            using var con = new SqlConnection(this.GetConnection());
             IEnumerable<Endereco> enderecos;
-            try
-            {
-                var sqlStatement = "SELECT * FROM Enderecos";
-                con.Open();
-                enderecos = con.Query<Endereco>(sqlStatement);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            var sqlStatement = "SELECT * FROM Enderecos";
+            enderecos = con.Query<Endereco>(sqlStatement);
             return enderecos;
         }
 
         public void Salvar(Endereco endereco)
         {
-            var con = new SqlConnection(this.GetConnection());
-            try
-            {
-                var sqlStatement = @"
-                    INSERT INTO Enderecos (cep, pais, estado, cidade, bairro, rua, numero, id_usuario)
-                    VALUES (@Cep, @Pais, @Estado, @Cidade, @Bairro, @Rua, @Numero, @Usuario_Id)
-                ";
-                con.Open();
-                con.Execute(sqlStatement, endereco);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                INSERT INTO Enderecos (Cep, Pais, Estado, Cidade, Bairro, Rua, Numero, UsuarioId)
+                VALUES (@Cep, @Pais, @Estado, @Cidade, @Bairro, @Rua, @Numero, @UsuarioId)
+            ";
+            con.Execute(sqlStatement, endereco);
         }
     }
 }

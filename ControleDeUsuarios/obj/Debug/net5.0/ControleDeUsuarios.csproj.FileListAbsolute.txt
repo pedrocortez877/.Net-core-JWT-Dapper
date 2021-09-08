@@ -156,8 +156,6 @@ C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\bin\Deb
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\bin\Debug\net5.0\ApiWeb.dll
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\bin\Debug\net5.0\ApiWeb.pdb
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\ControleDeUsuarios.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Details.cshtml.g.cs
-C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Edit.cshtml.g.cs
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Index.cshtml.g.cs
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Login.cshtml.g.cs
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Exception.cshtml.g.cs
@@ -165,3 +163,5 @@ C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Deb
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Administrador.cshtml.g.cs
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Create.cshtml.g.cs
 C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\bin\Debug\net5.0\Dapper.dll
+C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Edit.cshtml.g.cs
+C:\Users\pedro.cortez\source\repos\ControleDeUsuarios\ControleDeUsuarios\obj\Debug\net5.0\Razor\Views\User\Details.cshtml.g.cs

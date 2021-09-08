@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ApiWeb.Repositorio
 {
@@ -26,139 +27,66 @@ namespace ApiWeb.Repositorio
 
         public void Editar(Usuario usuario)
         {
-            var con = new SqlConnection(this.GetConnection());
-            try
-            {
-                var sqlStatement = @"
-                    UPDATE USUARIOS SET
-                    nome = @Nome,
-                    cpf = @Cpf,
-                    permissao = @Permissao,
-                    email = @Email,
-                    senha = @Senha
-                    WHERE id_usuario = @UsuarioId
-                ";
-                con.Open();
-                con.Query(sqlStatement, usuario);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                UPDATE USUARIOS SET
+                Nome = @Nome,
+                Cpf = @Cpf,
+                Permissao = @Permissao,
+                Email = @Email
+                WHERE UsuarioId = @UsuarioId
+            ";
+            con.Query(sqlStatement, usuario);
         }
 
         public void Excluir(Usuario usuario)
         {
-            var con = new SqlConnection(this.GetConnection());
-            try
-            {
-                var sqlStatement = @"
-                    DELETE FROM Usuarios
-                    WHERE id_usuario = @UsuarioId
-                ";
-                con.Open();
-                con.Query(sqlStatement, usuario);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception);
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                DELETE FROM Usuarios
+                WHERE UsuarioId = @UsuarioId
+            ";
+            con.Query(sqlStatement, usuario);
         }
 
         public Usuario ListaPorId(long id)
         {
-            var con = new SqlConnection(this.GetConnection());
-            Usuario usuario = new();
-            try
-            {
-                var sqlStatement = "SELECT * FROM Usuarios WHERE id_usuario =" + id;
-                con.Open();
-                usuario = con.Query<Usuario>(sqlStatement, usuario).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = "SELECT * FROM Usuarios WHERE UsuarioId =" + id;
+            Usuario usuario = con.Query<Usuario>(sqlStatement).FirstOrDefault();
             return usuario;
         }
 
         public IEnumerable<Usuario> ListarTodos()
         {
-            var con = new SqlConnection(this.GetConnection());
+            using var con = new SqlConnection(this.GetConnection());
             IEnumerable<Usuario> usuarios;
-            try
-            {
-                var sqlStatement = "SELECT * FROM Usuarios";
-                con.Open();
-                usuarios = con.Query<Usuario>(sqlStatement);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            var sqlStatement = "SELECT * FROM Usuarios";
+            usuarios = con.Query<Usuario>(sqlStatement);
             return usuarios;
         }
 
         public Usuario Logar(string email, string senha)
         {
-            var con = new SqlConnection(this.GetConnection());
+            using var con = new SqlConnection(this.GetConnection());
             Usuario usuario = new();
-            try
-            {
-                var sqlStatement = @"SELECT * FROM Usuarios WHERE email = @Email AND senha = @Senha";
-                con.Open();
-                usuario = con.Query<Usuario>(sqlStatement, new { Senha = senha, Email = email }).FirstOrDefault();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
+            var sqlStatement = @"SELECT * FROM Usuarios WHERE Email = @Email AND Senha = @Senha";
+            usuario = con.Query<Usuario>(sqlStatement, new { Senha = senha, Email = email }).FirstOrDefault();
             return usuario;
         }
 
-        public long Salvar(Usuario usuario)
+        public async Task<long> Salvar(Usuario usuario)
         {
-            var con = new SqlConnection(this.GetConnection());
-            long id;
-            try
-            {
-                var sqlStatement = @"
-                    INSERT INTO Usuarios (nome, cpf, permissao, email, senha)
-                    VALUES (@Nome, @Cpf, @Permissao, @Email, @Senha);
-                    SELECT CAST(SCOPE_IDENTITY() as INT);
+            using var con = new SqlConnection(this.GetConnection());
+            var sqlStatement = @"
+                INSERT INTO Usuarios (Nome, Cpf, Permissao, Email, Senha)
+                OUTPUT INSERTED.UsuarioId
+                VALUES (@Nome, @Cpf, @Permissao, @Email, @Senha);
                 ";
-                con.Open();
-                id = con.Execute(sqlStatement, usuario);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                con.Close();
-            }
-            return id;
+
+            var id = await con.QueryAsync<int>(sqlStatement, usuario);
+           
+            return id.Single();
         }
     }
 }
