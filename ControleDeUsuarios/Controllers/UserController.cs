@@ -20,20 +20,26 @@ namespace ControleDeUsuarios.Controllers
         }
         public IActionResult Index()
         {
-            //Verificar se token e nulo!!!
             string token = HttpContext.Session.GetString("token");
-            HttpResponseMessage response = api.GetUtil(token, "/Usuarios");
-
-            if (!response.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(token))
             {
-                return ExceptionUtil(response.StatusCode);
+                return View("Login");
             }
             else
             {
-                string stringData = response.Content.ReadAsStringAsync().Result;
-                IEnumerable<Usuario> usuarios = JsonConvert.DeserializeObject
-                    <List<Usuario>>(stringData);
-                return View("Index", usuarios);
+                HttpResponseMessage response = api.GetUtil(token, "/Usuarios");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return ExceptionUtil(response.StatusCode);
+                }
+                else
+                {
+                    string stringData = response.Content.ReadAsStringAsync().Result;
+                    IEnumerable<Usuario> usuarios = JsonConvert.DeserializeObject
+                        <List<Usuario>>(stringData);
+                    return View("Index", usuarios);
+                }
             }
         }
 
@@ -47,8 +53,12 @@ namespace ControleDeUsuarios.Controllers
         {
             if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
             {
-                var stringJWT = api.LoginUtil(usuario);
-                HttpContext.Session.SetString("token", stringJWT.Token);
+                var token = api.LoginUtil(usuario);
+                if (string.IsNullOrEmpty(token.Token))
+                {
+
+                }
+                HttpContext.Session.SetString("token", token.Token);
 
                 return RedirectToAction("Index");
             }
@@ -152,39 +162,52 @@ namespace ControleDeUsuarios.Controllers
         public IActionResult Delete(long id)
         {
             var token = HttpContext.Session.GetString("token");
-            Task<HttpResponseMessage> response = api.DeleteUtil(id, token);
-            if (!response.Result.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(token))
             {
-                return ExceptionUtil(response.Result.StatusCode);
+                return View("Login");
             }
-            return RedirectToAction("Index");
+            else
+            {
+                Task<HttpResponseMessage> response = api.DeleteUtil(id, token);
+                if (!response.Result.IsSuccessStatusCode)
+                {
+                    return ExceptionUtil(response.Result.StatusCode);
+                }
+                return RedirectToAction("Index");
+            }
         }
 
         public IActionResult Edit(long id)
         {
             string token = HttpContext.Session.GetString("token");
-            HttpResponseMessage responseGetUser = api.GetUtil(token, "/Usuarios/" + id);
-            if (!responseGetUser.IsSuccessStatusCode)
+            if (string.IsNullOrEmpty(token))
             {
-                return ExceptionUtil(responseGetUser.StatusCode);
+                return View("Login");
             }
-            HttpResponseMessage responseGetAddress = api.GetUtil(token, "/Enderecos/" + id);
-            if (!responseGetAddress.IsSuccessStatusCode)
+            else
             {
-                return ExceptionUtil(responseGetUser.StatusCode);
+                HttpResponseMessage responseGetUser = api.GetUtil(token, "/Usuarios/" + id);
+                if (!responseGetUser.IsSuccessStatusCode)
+                {
+                    return ExceptionUtil(responseGetUser.StatusCode);
+                }
+                HttpResponseMessage responseGetAddress = api.GetUtil(token, "/Enderecos/" + id);
+                if (!responseGetAddress.IsSuccessStatusCode)
+                {
+                    return ExceptionUtil(responseGetUser.StatusCode);
+                }
+
+                string stringUser = responseGetUser.Content.ReadAsStringAsync().Result;
+                Usuario usuario = JsonConvert.DeserializeObject
+                    <Usuario>(stringUser);
+
+                string stringAddress = responseGetAddress.Content.ReadAsStringAsync().Result;
+                Endereco endereco = JsonConvert.DeserializeObject
+                    <Endereco>(stringAddress);
+
+                Create create = InstanceCreate(usuario, endereco);
+                return View(create);
             }
-
-            string stringUser = responseGetUser.Content.ReadAsStringAsync().Result;
-            Usuario usuario = JsonConvert.DeserializeObject
-                <Usuario>(stringUser);
-
-            string stringAddress = responseGetAddress.Content.ReadAsStringAsync().Result;
-            Endereco endereco = JsonConvert.DeserializeObject
-                <Endereco>(stringAddress);
-
-            Create create = InstanceCreate(usuario, endereco);
-            return View(create);
-            
         }
 
         [HttpPost]
@@ -209,15 +232,15 @@ namespace ControleDeUsuarios.Controllers
         {
             if (response == HttpStatusCode.Unauthorized)
             {
-                return View("Não autorizado a acessar este recurso");
+                return View("Erro 401: Não autorizado a acessar este recurso");
             }
             if (response == HttpStatusCode.Forbidden)
             {
-                return View("Não tem permissões de acesso suficientes");
+                return View("Erro 403: Não tem permissões de acesso suficientes");
             }
             if (response == HttpStatusCode.BadRequest)
             {
-                return View("Erro desconhecido no servidor");
+                return View("Erro 500: Erro interno do servidor");
             }
             return null;
         }
