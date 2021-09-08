@@ -16,21 +16,23 @@ namespace ControleDeUsuarios.Services
     {
         private readonly string baseUrl = "https://localhost:44355/";
 
-        public HttpClient HttpUtil()
+        public HttpClient HttpUtil(string token)
         {
             HttpClient client = new()
             {
                 BaseAddress = new Uri(baseUrl)
             };
+            client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
             var contentType = new MediaTypeWithQualityHeaderValue
                 ("application/json");
             client.DefaultRequestHeaders.Accept.Add(contentType);
             return client;
         }
 
-        public string LoginUtil(Usuario usuario)
+        public TokenJWT LoginUtil(Usuario usuario)
         {
-            HttpClient client = HttpUtil();
+            HttpClient client = HttpUtil("");
             string stringData = JsonConvert.SerializeObject(usuario);
             var contentData = new StringContent
                 (stringData, System.Text.Encoding.UTF8, "application/json");
@@ -38,15 +40,13 @@ namespace ControleDeUsuarios.Services
             HttpResponseMessage response = client.PostAsync
                 ("/Login", contentData).Result;
             string stringJWT = response.Content.ReadAsStringAsync().Result;
-            string jwt = stringJWT[10..^2];
+            var jwt = JsonConvert.DeserializeObject<TokenJWT>(stringJWT);
             return jwt;
         }
    
         public HttpResponseMessage GetUtil(string token, string route)
         {
-            HttpClient client = HttpUtil();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = HttpUtil(token);
 
             HttpResponseMessage response = client.GetAsync(route).Result;
 
@@ -55,10 +55,8 @@ namespace ControleDeUsuarios.Services
 
         public HttpResponseMessage CreateUtil(Usuario usuario, Endereco endereco, string token)
         {
-            HttpClient client = HttpUtil();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-
+            HttpClient client = HttpUtil(token);
+            
             string route = "/Usuarios";
             string stringData = JsonConvert.SerializeObject(usuario);
             var contentData = new StringContent
@@ -87,9 +85,7 @@ namespace ControleDeUsuarios.Services
 
         public async Task<HttpResponseMessage> DeleteUtil(long id, string token)
         {
-            HttpClient client = HttpUtil();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = HttpUtil(token);
 
             string url = "/Usuarios/" + id; 
 
@@ -99,9 +95,7 @@ namespace ControleDeUsuarios.Services
 
         public HttpResponseMessage EditUtil(Usuario usuario, Endereco endereco, string token)
         {
-            HttpClient client = HttpUtil();
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            HttpClient client = HttpUtil(token);
 
             Task<HttpResponseMessage> responseUser = EditUser(usuario, client);
 

@@ -47,8 +47,8 @@ namespace ControleDeUsuarios.Controllers
         {
             if (!string.IsNullOrEmpty(usuario.Email) && !string.IsNullOrEmpty(usuario.Senha))
             {
-                string stringJWT = api.LoginUtil(usuario);
-                HttpContext.Session.SetString("token", stringJWT);
+                var stringJWT = api.LoginUtil(usuario);
+                HttpContext.Session.SetString("token", stringJWT.Token);
 
                 return RedirectToAction("Index");
             }
